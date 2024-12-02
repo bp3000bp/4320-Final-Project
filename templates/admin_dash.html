@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <h2>Seating Chart</h2>
+    <table>
+        {% for row in seating_chart %}
+        <tr>
+            {% for seat in row %}
+            <td>{{ seat }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>Total Sales: ${{ total_sales }}</h3>
+    <a href="/">Back to Main Menu</a>
+</body>
+</html>
