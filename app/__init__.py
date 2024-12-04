@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -5,10 +6,11 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your_secret_key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reservations.db'
+    db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../reservations.db"))
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
-    
-    # Import and register blueprints here if using them
-    
+    print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    app.config['SQLALCHEMY_ECHO'] = True
+
     return app

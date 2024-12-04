@@ -1,14 +1,18 @@
 from . import db
 
 class Reservation(db.Model):
+    __tablename__ = 'reservations'
+
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    row = db.Column(db.Integer, nullable=False)
-    column = db.Column(db.Integer, nullable=False)
-    reservation_code = db.Column(db.String(100), unique=True, nullable=False)
+    passengerName = db.Column(db.String(50), nullable=False)
+    seatRow = db.Column(db.Integer, nullable=False)
+    seatColumn = db.Column(db.Integer, nullable=False)
+    eTicketNumber = db.Column(db.String(100), unique=True, nullable=False)
+    created = db.Column(db.DateTime, nullable=False, server_default=db.func.current_timestamp())
+
 
 class Admin(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
+    __tablename__ = 'admins'
+
+    username = db.Column(db.String(50), primary_key=True)
     password = db.Column(db.String(50), nullable=False)
