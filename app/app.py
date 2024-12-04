@@ -17,20 +17,35 @@ def index():
 
 @app.route('/reserve', methods=['GET', 'POST'])
 def reserve_seat():
-    with app.app_context():  
+    with app.app_context():
+        # Create a seating chart (default is 'Available')
+        seating_chart = [['Available' for _ in range(4)] for _ in range(12)]
+
+        # Query the database for existing reservations
+        reservations = db.session.query(Reservation).all()
+
+        # Update the seating chart with reserved seats
+        for res in reservations:
+            seating_chart[res.seatRow - 1][res.seatColumn - 1] = 'Reserved'
+
         if request.method == 'POST':
             passengerName = request.form['passengerName']
             seatRow = int(request.form['seatRow'])
             seatColumn = int(request.form['seatColumn'])
 
+            # Check if the selected seat is already reserved
             existing_reservation = db.session.query(Reservation).filter_by(
                 seatRow=seatRow, seatColumn=seatColumn).first()
-            
-            if existing_reservation:
-                flash("Seat already reserved. Please choose another seat.")
-                return render_template('reserve.html')
 
+            if existing_reservation:
+                # Display error if seat is taken
+                flash("Seat already reserved. Please choose another seat.")
+                return render_template('reserve.html', seating_chart=seating_chart, enumerate=enumerate)
+
+            # Generate an eTicketNumber for the new reservation
             eTicketNumber = f"{seatRow}{seatColumn}{passengerName[:4]}"
+
+            # Add the new reservation to the database
             new_reservation = Reservation(
                 passengerName=passengerName,
                 seatRow=seatRow,
@@ -40,9 +55,13 @@ def reserve_seat():
             db.session.add(new_reservation)
             db.session.commit()
 
+            # Success message
             flash(f"Reservation successful! Your eTicket number: {eTicketNumber}")
             return redirect(url_for('index'))
-        return render_template('reserve.html')
+
+        # Render the form with the updated seating chart
+        return render_template('reserve.html', seating_chart=seating_chart, enumerate=enumerate)
+
 
 
 

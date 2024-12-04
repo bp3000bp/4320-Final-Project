@@ -7,6 +7,8 @@
 </head>
 <body>
     <h1>Reserve Your Seat</h1>
+
+    <!-- Reservation Form -->
     <form method="POST" action="/reserve">
         <label for="passengerName">Passenger Name:</label>
         <input type="text" id="passengerName" name="passengerName" required><br>
@@ -19,6 +21,31 @@
 
         <button type="submit">Reserve Seat</button>
     </form>
+
+    <!-- Seating Chart -->
+    <h2>Seating Chart</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Row</th>
+                <th>Seat 1</th>
+                <th>Seat 2</th>
+                <th>Seat 3</th>
+                <th>Seat 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row_index, row in enumerate(seating_chart) %}
+            <tr>
+                <td>{{ row_index + 1 }}</td>
+                {% for seat in row %}
+                <td>{{ seat }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <a href="/">Back to Main Menu</a>
 </body>
 </html>
