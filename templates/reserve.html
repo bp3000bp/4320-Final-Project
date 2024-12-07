@@ -1,51 +1,144 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserve a Seat</title>
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reserve a Seat</title>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .reserve-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .reserve-container h2 {
+            margin-bottom: 20px;
+        }
+        .reserve-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .reserve-container input, .reserve-container select, .reserve-container button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .reserve-container button {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        .reserve-container button:hover {
+            border: 2px solid #218838;
+        }
+        .seating-chart {
+            display: grid;
+            grid-template-columns: repeat(4, 50px);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .seat {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .available {
+            background-color: #28a745;
+            color: white;
+        }
+        .reserved {
+            background-color: #dc3545;
+            color: white;
+            cursor: not-allowed;
+        }
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .confirmation {
+            color: #28a745;
+            margin-top: 20px;
+            font-weight: bold;
+            display: none;
+        }
+    </style></head>
 <body>
-    <h1>Reserve Your Seat</h1>
-
-    <!-- Reservation Form -->
-    <form method="POST" action="/reserve">
-        <label for="passengerName">Passenger Name:</label>
-        <input type="text" id="passengerName" name="passengerName" required><br>
-
-        <label for="seatRow">Seat Row (1-12):</label>
-        <input type="number" id="seatRow" name="seatRow" min="1" max="12" required><br>
-
-        <label for="seatColumn">Seat Column (1-4):</label>
-        <input type="number" id="seatColumn" name="seatColumn" min="1" max="4" required><br>
-
-        <button type="submit">Reserve Seat</button>
-    </form>
-
-    <!-- Seating Chart -->
-    <h2>Seating Chart</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Row</th>
-                <th>Seat 1</th>
-                <th>Seat 2</th>
-                <th>Seat 3</th>
-                <th>Seat 4</th>
-            </tr>
-        </thead>
-        <tbody>
+<h1>Reserve Your Seat</h1>
+<!-- Reservation Form -->
+<form action="/reserve" method="POST">
+<label for="passengerName">Passenger Name:</label>
+<input id="passengerName" name="passengerName" required="" type="text"/><br/>
+<label for="seatRow">Seat Row (1-12):</label>
+<input id="seatRow" max="12" min="1" name="seatRow" required="" type="number"/><br/>
+<label for="seatColumn">Seat Column (1-4):</label>
+<input id="seatColumn" max="4" min="1" name="seatColumn" required="" type="number"/><br/>
+<button type="submit">Reserve Seat</button>
+</form>
+<!-- Seating Chart -->
+<h2>Seating Chart</h2>
+<table border="1">
+<thead>
+<tr>
+<th>Row</th>
+<th>Seat 1</th>
+<th>Seat 2</th>
+<th>Seat 3</th>
+<th>Seat 4</th>
+</tr>
+</thead>
+<tbody>
             {% for row_index, row in enumerate(seating_chart) %}
             <tr>
-                <td>{{ row_index + 1 }}</td>
+<td>{{ row_index + 1 }}</td>
                 {% for seat in row %}
                 <td>{{ seat }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
-    </table>
-
-    <a href="/">Back to Main Menu</a>
-</body>
+</table>
+<a href="/">Back to Main Menu</a>
+<div class="seating-chart">
+<!-- Dynamically create seats -->
+<script>
+            const seatingChart = document.querySelector('.seating-chart');
+            const rows = 12;
+            const columns = ['A', 'B', 'C', 'D'];
+            
+            for (let row = 1; row <= rows; row++) {
+                for (let col of columns) {
+                    const seat = document.createElement('div');
+                    seat.classList.add('seat', 'available');
+                    seat.textContent = `${row}${col}`;
+                    seat.title = `Row: ${row}, Column: ${col}`;
+                    seatingChart.appendChild(seat);
+                }
+            }
+        </script>
+</div></body>
 </html>
